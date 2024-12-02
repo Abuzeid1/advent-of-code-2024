@@ -1,31 +1,37 @@
 package main
 
 import (
-	"encoding/csv"
+	"bufio"
 	"fmt"
 	"os"
 	"sort"
 	"strconv"
+	"strings"
 )
 
-func main() {
-	file, err := os.Open("1.csv")
+func day_1() {
+	file, err := os.Open("./inputs/1.txt")
 	if err != nil {
-		fmt.Println("Error opening file", err)
+		fmt.Println("Error opening file:", err)
 		return
 
 	}
 	defer file.Close()
 	var inputArr1 = make([]int, 0, 1000)
 	var inputArr2 = make([]int, 0, 1000)
-	reader := csv.NewReader(file)
 
-	recordes, err := reader.ReadAll()
-	for _, record := range recordes {
-		value, _ := strconv.Atoi(record[0])
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		parts := strings.Split(line, "   ")
+		value, _ := strconv.Atoi(parts[0])
 		inputArr1 = append(inputArr1, value)
-		secondValue, _ := strconv.Atoi(record[1])
+		secondValue, _ := strconv.Atoi(parts[1])
 		inputArr2 = append(inputArr2, secondValue)
+	}
+	if err := scanner.Err(); err != nil {
+		fmt.Println("Error Scanning file:", err)
 	}
 
 	sort.Ints(inputArr1)
@@ -39,7 +45,8 @@ func main() {
 			DifferenceSum += (number - inputArr2[index]) * -1
 		}
 	}
-	fmt.Println(DifferenceSum)
+	fmt.Println("day 1 first challenge output: ", DifferenceSum)
+
 	// Second Challenge Find Similarities	occurrences := make(map[int]int)
 
 	occurrences := make(map[int]int)
@@ -71,5 +78,5 @@ func main() {
 	for i, num := range occurrences {
 		sum += i * num
 	}
-	fmt.Println(sum)
+	fmt.Println("day 1 first challenge output: ", sum)
 }
