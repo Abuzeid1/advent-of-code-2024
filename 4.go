@@ -72,4 +72,45 @@ func day_4() {
 	fmt.Println("day four first challenge output: ", matches)
 	fmt.Println("day four second challenge output: ", secondChallengeMatches)
 
+	// Another approach traferesting the string instead
+	lineLength := 140 + 1 // +1 because of \n -newline-
+	length := len(input)
+	var byteCount int
+
+	isXMASbyte := func(word []byte) {
+		if string(word) == "XMAS" || string(word) == "SAMX" {
+			byteCount++
+		}
+	}
+	var seconbyteCount int
+	isMASbyte := func(word []byte) bool {
+		if string(word) == "MS" || string(word) == "SM" {
+			return true
+		}
+		return false
+	}
+
+	for i, current := range input {
+		if i < length-3 {
+			isXMASbyte([]byte{current, input[i+1], input[i+2], input[i+3]})
+		}
+		if i+lineLength*3 < length {
+			isXMASbyte([]byte{current, input[i+lineLength], input[i+lineLength*2], input[i+lineLength*3]})
+		}
+		if i+lineLength*3+3 < length {
+			isXMASbyte([]byte{current, input[i+lineLength+1], input[i+lineLength*2+2], input[i+lineLength*3+3]})
+
+		}
+		if i+lineLength*3-3 < length && i > 3 {
+			isXMASbyte([]byte{current, input[i+lineLength-1], input[i+lineLength*2-2], input[i+(lineLength*3)-3]})
+
+		}
+		if 0 <= i-lineLength-1 && i+lineLength+1 < length {
+			if string(current) == "A" && isMASbyte([]byte{input[i-lineLength-1], input[i+lineLength+1]}) && isMASbyte([]byte{input[i-lineLength+1], input[i+lineLength-1]}) {
+				seconbyteCount++
+			}
+
+		}
+	}
+
 }
