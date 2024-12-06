@@ -13,7 +13,7 @@ func day_4() {
 		fmt.Println("Error reading file: ", err)
 	}
 
-	// conver string to grid
+	// convert string to grid
 	var grid [140][140]string
 	for i, line := range strings.Split(string(input), "\n") {
 		grid[i] = [140]string(strings.Split(line, ""))
