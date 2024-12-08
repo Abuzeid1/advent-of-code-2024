@@ -14,79 +14,76 @@ func day_7() {
 		fmt.Println("Error reading file: ", err)
 	}
 
-	for key, line := range strings.Split(string(input), "\n") {
+	totalSum := 0       //1298300076754
+	totalSecondSum := 0 //248427118972289
+
+	for _, line := range strings.Split(string(input), "\n") {
 		parts := strings.Split(line, ":")
 		sum, _ := strconv.Atoi(parts[0])
 
 		numbersPart := strings.Split(strings.TrimSpace(parts[1]), " ")
-		operate(numbersPart, 0, 0, [2]int{key, sum})
-		operateContact(numbersPart, 0, 0, [2]int{key, sum})
 
-	}
-	totalSum := 0
-	for key, possibleSums := range sums {
-		for _, sum := range possibleSums {
-			if sum == key[1] {
+		for _, num := range operate(numbersPart, 0) {
+			if num == sum {
 				totalSum += sum
 				break
 			}
 		}
-	}
-	// second Challenge Sums
-	totalSecondSum := 0
-	for key, possibleSums := range secondSums {
-		for _, sum := range possibleSums {
-			if sum == key[1] {
+		for _, num := range operateContact(numbersPart, 0) {
+			if num == sum {
 				totalSecondSum += sum
 				break
 			}
 		}
+
 	}
+
+	// second Challenge Sums
+
 	fmt.Println("Day 7 first challenge: ", totalSum)
 	fmt.Println("Day 7 second challenge: ", totalSecondSum)
 }
 
-var sums = make(map[[2]int][]int)
-
 // First Challenge
-func operate(arr []string, sum int, index int, key [2]int) {
-	if index >= len(arr) {
-		if key[1] == sum {
-			sums[key] = append(sums[key], sum)
-		}
+func operate(arr []string, sum int) []int {
+	// fmt.Println(sum, index)
+	if len(arr) <= 0 {
+		return []int{sum}
 	} else {
-		num, _ := strconv.Atoi(arr[index])
-		if index == 0 {
-			operate(arr, num, index+1, key)
+
+		num, _ := strconv.Atoi(arr[0])
+
+		arr = arr[1:]
+
+		if sum == 0 {
+			return operate(arr, sum+num)
 
 		} else {
-			operate(arr, sum+num, index+1, key)
-			operate(arr, sum*num, index+1, key)
+			return append(operate(arr, sum+num), operate(arr, sum*num)...)
 		}
 	}
 }
 
-var secondSums = make(map[[2]int][]int)
+func operateContact(arr []string, sum int) []int {
 
-func operateContact(arr []string, sum int, index int, key [2]int) {
-	if index >= len(arr) {
-		if key[1] == sum {
+	if len(arr) <= 0 {
 
-			secondSums[key] = append(secondSums[key], sum)
-		}
+		return []int{sum}
+
 	} else {
-		num, _ := strconv.Atoi(arr[index])
-		if index == 0 {
-			operateContact(arr, num, index+1, key)
+		num, _ := strconv.Atoi(arr[0])
+		string1 := strconv.Itoa(sum) + arr[0]
+		arr = arr[1:]
+		if sum == 0 {
+			return operateContact(arr, num)
 
 		} else {
-			operateContact(arr, sum+num, index+1, key)
-			operateContact(arr, sum*num, index+1, key)
-			string1 := strconv.Itoa(sum) + arr[index]
-			sum, _ = strconv.Atoi(string1)
-			operateContact(arr, sum, index+1, key)
+			getConcatenation := func() int {
+				concatenation, _ := strconv.Atoi(string1)
+				return concatenation
+			}
+			return append(append(operateContact(arr, sum+num), operateContact(arr, sum*num)...), operateContact(arr, getConcatenation())...)
+
 		}
 	}
 }
-
-// 248427118972289
