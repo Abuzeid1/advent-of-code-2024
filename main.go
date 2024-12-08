@@ -6,4 +6,6 @@ func main() {
 	day_3()
 	day_4()
 	day_5()
+
+	day_7()
 }
