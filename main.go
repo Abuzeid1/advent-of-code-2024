@@ -10,4 +10,5 @@ func main() {
 	day_7()
 	day_8()
 	day_9()
+	day_10()
 }
